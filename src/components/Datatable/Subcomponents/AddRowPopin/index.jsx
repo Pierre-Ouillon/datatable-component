@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StyledPopin, StyledOverlay, StyledTitle, StyledTitleImg, StyledHr, StyledButtonValid } from './index.styled';
 import AddRowInput from '../AddRowInput';
-import { DatatableDispatchContext } from '../../contexts/DatatableContext';
-import xMark from '../../assets/images/icon_x_mark_white.png';
+import { DatatableDispatchContext } from '../../../../contexts/DatatableContext';
+import xMark from '../../../../assets/images/icon_x_mark_white.png';
 
 const AddRowPopin = ({columns, setIsDisplayed}) => {
     const [formData, setFormData] = useState({});

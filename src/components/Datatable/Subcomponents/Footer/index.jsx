@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { DatatableContext, DatatableDispatchContext } from '../../contexts/DatatableContext';
+import { DatatableContext, DatatableDispatchContext } from '../../../../contexts/DatatableContext';
 import {StyledFooter, StyledFooterButton} from './index.styled';
-import firstIcon from '../../assets/images/icon_first_black.png';
-import previousIcon from '../../assets/images/icon_previous_black.png';
-import nextIcon from '../../assets/images/icon_next_black.png';
-import lastIcon from '../../assets/images/icon_last_black.png';
+import firstIcon from '../../../../assets/images/icon_first_black.png';
+import previousIcon from '../../../../assets/images/icon_previous_black.png';
+import nextIcon from '../../../../assets/images/icon_next_black.png';
+import lastIcon from '../../../../assets/images/icon_last_black.png';
 import Input from '../Input';
 
 const Footer = () => {

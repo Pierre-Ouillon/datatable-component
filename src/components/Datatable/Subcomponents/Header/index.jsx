@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StyledHeader, StyledHeaderCell } from './index.styled';
 import Input from '../Input';
-import { DatatableContext, DatatableDispatchContext } from '../../contexts/DatatableContext';
+import { DatatableContext, DatatableDispatchContext } from '../../../../contexts/DatatableContext';
 import SortableHeaderCell from '../SortableHeaderCell';
 
 const Header = ({ columns }) => {

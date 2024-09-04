@@ -1,18 +1,18 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import Row from './components/Row';
-import { DatatableContext, DatatableDispatchContext, datatableReducer, getLastPage } from './contexts/DatatableContext';
+import Row from './Subcomponents/Row';
+import { DatatableContext, DatatableDispatchContext, datatableReducer, getLastPage } from '../../contexts/DatatableContext';
 import {
     StyledContainer,
     StyledTable,
     StyledImg,
     StyledButtonAdd,
     StyledImgContainer
-} from './style';
-import addIcon from './assets/images/icon_plus.png';
-import AddRowPopin from './components/AddRowPopin';
-import Header from './components/Header';
-import Footer from './components/Footer';
+} from './index.styled';
+import addIcon from '../../assets/images/icon_plus.png';
+import AddRowPopin from './Subcomponents/AddRowPopin';
+import Header from './Subcomponents/Header';
+import Footer from './Subcomponents/Footer';
 
 const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, onRowEdition = () => {}, onRowDeletion = () => {} }) => {
     let rows = [];

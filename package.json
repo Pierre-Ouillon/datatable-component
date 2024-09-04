@@ -1,31 +1,34 @@
 {
-    "name": "datatable-component",
-    "version": "0.1.0",
-    "main": "dist/index.js",
+    "name": "@pierre-ouillon/datatable-component",
+    "version": "0.2.0",
+    "main": "./build/Datatable.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "webpack-dev-server --mode development --open",
+        "build": "webpack --mode production"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Pierre-Ouillon/datatable-component.git"
+        "type": "git",
+        "url": "git+https://github.com/Pierre-Ouillon/datatable-component.git"
     },
     "author": "Pierre Ouillon",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/Pierre-Ouillon/datatable-component/issues"
+        "url": "https://github.com/Pierre-Ouillon/datatable-component/issues"
     },
     "homepage": "https://github.com/Pierre-Ouillon/datatable-component#readme",
     "description": "",
-    "devDependencies": {
-    },
     "dependencies": {
         "@babel/core": "^7.25.2",
         "@babel/preset-env": "^7.25.4",
         "@babel/preset-react": "^7.24.7",
-        "babel-loader": "^9.1.3",
-        "file-loader": "^6.2.0",
         "prop-types": "^15.8.1",
         "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "styled-components": "^6.1.12"
+    },
+    "devDependencies": {
+        "@neutrinojs/react-components": "^9.5.0",
+        "neutrino": "^9.5.0"
     }
-  }
+}

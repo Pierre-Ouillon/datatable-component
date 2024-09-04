@@ -1,10 +1,10 @@
-import {React, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import PropTypes from 'prop-types';
 import Cell from '../Cell/';
 import ActionCell from '../ActionCell/';
 import {StyledRow} from './index.styled';
-import {RowContext} from '../../contexts/rowContext';
-import { DatatableDispatchContext } from '../../contexts/DatatableContext';
+import {RowContext} from '../../../../contexts/rowContext';
+import { DatatableDispatchContext } from '../../../../contexts/DatatableContext';
 
 const Row = ({columns, row, id}) => {
     const [editMode, setEditMode] = useState(false);
