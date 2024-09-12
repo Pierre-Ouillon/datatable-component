@@ -10,3 +10,7 @@ export const StyledWrapper = styled.div`
     width: 50%;
     margin: auto;
 `;
+
+export const StyledDateTimeContainer = styled.div`
+    display: flex;
+`;

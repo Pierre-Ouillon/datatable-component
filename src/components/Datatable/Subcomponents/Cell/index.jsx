@@ -5,7 +5,7 @@ import Input from '../Input';
 
 const Cell = ({field, value, editMode, formData, setFormData}) => {
     const handleChange = (e) => {
-        formData[field] = e.target.value;
+        formData[field.name] = e.target.value;
         setFormData(formData);
     };
     return (editMode ?

@@ -2,6 +2,6 @@ import styled from "styled-components";
 
 export const StyledInput = styled.input`
     width: ${$props => $props.width};
-    display: block;
+    display: inline-block;
     text-align: inherit;
 `;

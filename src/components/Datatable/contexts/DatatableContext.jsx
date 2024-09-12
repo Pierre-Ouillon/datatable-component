@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { convertToType } from '../utils';
 
 export const DatatableContext = createContext({rows: [],  filter:{}, sorters:[]});
 export const DatatableDispatchContext = createContext(null);
@@ -22,9 +23,14 @@ export function datatableReducer(state, action){
             const afterDeleteState = {...state, rows: state.rows.filter((e) => e.rowId !== action.rowId)};
             return (state.pagination) ? updateLastPage(afterDeleteState) : afterDeleteState;
         case 'addRow':
-            const newRowData = {...state.emptyRowData, ...action.rowData };
-            state.eventListeners.onRowAddition(newRowData);
-            const afterAddState = {...state, rows: state.rows.concat([{ rowId: state.rows.length, isDisplayed: true, data: newRowData}])};
+            state.eventListeners.onRowAddition(action.rowData);
+            const formattedData = {};
+            const data = {};
+            state.fields.forEach((field) => {
+                data[field.name] = convertToType(action.rowData[field.name], field.type);
+                formattedData[field.name] = field.formatter(data[field.name]);
+            });
+            const afterAddState = {...state, rows: state.rows.concat([{ rowId: state.rows.length, isDisplayed: true, data: data, formattedData: formattedData}])};
             return (state.pagination) ? updateLastPage(afterAddState) : afterAddState;
         case 'editRow':
             return {...state, rows:state.rows.map((e) => {
@@ -42,7 +48,7 @@ export function datatableReducer(state, action){
                     const regexp = new RegExp(newState.filter[prop], "gi");
                     if(
                         newState.filter[prop] !== "" 
-                        && e.data[prop].search(regexp) === -1
+                        && e.formattedData[prop].search(regexp) === -1
                     ){
                         return {...e, isDisplayed: false};
                     }

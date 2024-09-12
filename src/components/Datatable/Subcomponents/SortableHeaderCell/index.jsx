@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { StyledSortableHeaderCell, StyledLabel } from './index.styled';
 import { StyledFlexDiv } from '../../../../style';
-import { DatatableDispatchContext } from '../../../../contexts/DatatableContext';
+import { DatatableDispatchContext } from '../../contexts/DatatableContext';
 import initialSortIcon from '../../../../assets/images/icon_sort_initial_white.png';
 import upSortIcon from '../../../../assets/images/icon_sort_up_white.png';
 import downSortIcon from '../../../../assets/images/icon_sort_down_white.png';

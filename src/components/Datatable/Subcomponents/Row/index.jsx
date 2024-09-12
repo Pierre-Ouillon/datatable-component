@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import Cell from '../Cell/';
 import ActionCell from '../ActionCell/';
 import {StyledRow} from './index.styled';
-import {RowContext} from '../../../../contexts/rowContext';
-import { DatatableDispatchContext } from '../../../../contexts/DatatableContext';
+import {RowContext} from '../../contexts/rowContext';
+import { DatatableDispatchContext } from '../../contexts/DatatableContext';
 
-const Row = ({columns, row, id}) => {
+const Row = ({fields, row, id}) => {
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({});
     const dispatch = useContext(DatatableDispatchContext);
 
     let cellList = [];
 
-    columns.forEach(e => {
+    fields.forEach(e => {
         cellList.push(
             <Cell 
                 key={e.name} 
-                field={e.name} 
-                value={row[e.name]} 
+                field={e} 
+                value={(editMode ? row.data[e.name] : row.formattedData[e.name])} 
                 editMode={editMode} 
                 formData={formData} 
                 setFormData={setFormData}

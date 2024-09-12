@@ -1,7 +1,7 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Row from './Subcomponents/Row';
-import { DatatableContext, DatatableDispatchContext, datatableReducer, getLastPage } from '../../contexts/DatatableContext';
+import { DatatableContext, DatatableDispatchContext, datatableReducer, getLastPage } from './contexts/DatatableContext';
 import {
     StyledContainer,
     StyledTable,
@@ -13,19 +13,66 @@ import addIcon from '../../assets/images/icon_plus.png';
 import AddRowPopin from './Subcomponents/AddRowPopin';
 import Header from './Subcomponents/Header';
 import Footer from './Subcomponents/Footer';
+import { convertToType } from './utils';
+
+const getDefaultValues = (type) => {
+    switch(type){
+        case "string":
+            return () => "";
+        case "int":
+            return () => 0;
+        case "float":
+            return () => 0.0;
+        case "date":
+            return () => new Date().toISOString().substring(0, 10);
+        case "datetime":
+            return () => new Date().toISOString();
+    }
+};
+
+const getDefaultFormatter = (type) => {
+    switch(type){
+        case 'date':
+            return (value) => new Intl.DateTimeFormat().format(value);
+        case 'datetime':
+            return (value) => new Intl.DateTimeFormat(undefined, {timeStyle: "medium", dateStyle: "medium"}).format(value);
+        case 'float':
+            return (value) => {
+                var parts = value.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                return parts.join(".");
+            }
+        case 'int':
+            return (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        case 'string':
+        default: 
+        return (value) => value;
+    }
+};
 
 const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, onRowEdition = () => {}, onRowDeletion = () => {} }) => {
     let rows = [];
-    const emptyRowData = {};
+    let fields = columns;
     const initialFilter = {};
     const initialSort = {};
     let defaultSort;
-    
-    initialData.forEach((element, index) => {
-        rows.push({ rowId: index, isDisplayed: true, data: element })
-    });
 
-    columns.forEach((e) => {
+    fields.forEach((e) => {
+        if(!e.type){
+            e.type = "string";
+        }
+
+        if(!e.formatter){
+            e.formatter = getDefaultFormatter(e.type);
+        }
+
+        if(e.defaultValue){
+            e.getDefaultValue = () => e.defaultValue;
+        }
+        else{
+            e.getDefaultValue = getDefaultValues(e.type);
+        }
+
         if (e.filterable) {
             initialFilter[e.name] = "";
         }
@@ -41,19 +88,25 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, on
         }
     });
 
-    for(const prop in initialData[0]){
-        emptyRowData[prop] = "";
-    }
+    initialData.forEach((element, index) => {
+        const data = {};
+        const formattedData = {};
+        fields.forEach((field) => {
+            data[field.name] = convertToType(element[field.name], field.type);
+            formattedData[field.name] = field.formatter(data[field.name]);
+        });
+
+        rows.push({ rowId: index, isDisplayed: true, data: data, formattedData: formattedData })
+    });
 
     (defaultSort && rows.sort((a, b) => {
         return (defaultSort.order === 'asc') ? a.data[defaultSort.name] > b.data[defaultSort.name] : a.data[defaultSort.name] < b.data[defaultSort.name]
     }));
-
     const initialState = {
         rows: rows,
         filter: initialFilter,
         sort: initialSort,
-        emptyRowData: emptyRowData,
+        fields: fields,
         eventListeners: {onRowAddition: onRowAddition, onRowEdition: onRowEdition, onRowDeletion: onRowDeletion}
     };
 
@@ -74,7 +127,7 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, on
     for (const row of datatableState.rows){
         if(row.isDisplayed){
             if(!datatableState.pagination || cpt >= start){
-                displayedRows.push(<Row key={row.rowId} columns={columns} row={row.data} id={row.rowId}></Row>);
+                displayedRows.push(<Row key={row.rowId} fields={fields} row={row} id={row.rowId}></Row>);
             }
             cpt++;
         }
@@ -92,14 +145,14 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, on
                         <StyledImgContainer><StyledImg src={addIcon}></StyledImg></StyledImgContainer>
                     </StyledButtonAdd>
                     <StyledTable>
-                        <Header columns={columns}></Header>
+                        <Header fields={fields}></Header>
                         <tbody>
                             {displayedRows}
                         </tbody>
                     </StyledTable>
                     {(options?.rowsPerPage) && <Footer></Footer>}
                 </StyledContainer>
-                {(popinDisplayed && <AddRowPopin columns={columns} setIsDisplayed={setPopinDisplayed}></AddRowPopin>)}
+                {(popinDisplayed && <AddRowPopin fields={fields} setIsDisplayed={setPopinDisplayed}></AddRowPopin>)}
             </DatatableDispatchContext.Provider>
         </DatatableContext.Provider>
     );
