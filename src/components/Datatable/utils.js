@@ -21,4 +21,14 @@ export const convertToType = (value, type) => {
         default:
             return String(value);
     }
-}
+};
+
+export const mySort = (firstValue, secondValue, sortOrder) => {
+    if(firstValue > secondValue){
+        return (sortOrder === 'asc') ? 1 : -1;
+    }
+    else if(firstValue < secondValue) {
+        return (sortOrder === 'asc') ? -1 : 1;
+    }
+    return 0;
+};
