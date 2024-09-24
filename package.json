@@ -55,5 +55,8 @@
   },
   "peerDependencies": {
     "react": "^18.3.1"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }
