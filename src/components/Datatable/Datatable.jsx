@@ -1,5 +1,6 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import {format} from 'date-fns';
 import Row from './Subcomponents/Row';
 import { DatatableContext, DatatableDispatchContext, datatableReducer, getLastPage } from './contexts/DatatableContext';
 import {
@@ -13,7 +14,7 @@ import addIcon from '../../assets/images/icon_plus.png';
 import AddRowPopin from './Subcomponents/AddRowPopin';
 import Header from './Subcomponents/Header';
 import Footer from './Subcomponents/Footer';
-import { convertToType } from './utils';
+import { convertToType, mySort } from './utils';
 
 const getDefaultValues = (type) => {
     switch(type){
@@ -100,8 +101,9 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => {}, on
     });
 
     (defaultSort && rows.sort((a, b) => {
-        return (defaultSort.order === 'asc') ? a.data[defaultSort.name] > b.data[defaultSort.name] : a.data[defaultSort.name] < b.data[defaultSort.name]
-    }));
+        return mySort(a.data[defaultSort.name], b.data[defaultSort.name], defaultSort.order);
+    }))
+    
     const initialState = {
         rows: rows,
         filter: initialFilter,

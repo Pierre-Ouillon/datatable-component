@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { convertToType } from '../utils';
+import { convertToType, mySort } from '../utils';
 
 export const DatatableContext = createContext({rows: [],  filter:{}, sorters:[]});
 export const DatatableDispatchContext = createContext(null);
@@ -63,7 +63,7 @@ export function datatableReducer(state, action){
             }
             const sortedRows = [...state.rows];
             sortedRows.sort((a, b) => {
-                return (action.sort.order === 'asc') ? a.data[action.sort.name] > b.data[action.sort.name] : a.data[action.sort.name] < b.data[action.sort.name]
+                return mySort(a.data[action.sort.name], b.data[action.sort.name], action.sort.order);
             });
             return {...state, sort: newSort, rows:sortedRows};
         case 'goToFirstPage':
