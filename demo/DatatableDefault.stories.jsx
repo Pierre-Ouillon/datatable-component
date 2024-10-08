@@ -1,11 +1,5 @@
 import Datatable from '../src/components/Datatable/Datatable';
-import data from '../data.json';
-
-const meta = {
-  component: Datatable,
-};
-
-export default meta;
+import data from './data.json';
 
 const formatLoginDate = (value) => new Intl.DateTimeFormat("fr-FR", {timeStyle: "medium", dateStyle: "short"}).format(value);
 const formatSalary = (value) => {
@@ -24,13 +18,25 @@ const columns = [
   {name: "last_login_time", label: "Last login", type: "datetime", formatter: formatLoginDate, sortable: true}
 ];
 const options = {
-  rowsPerPage: 10
+  rowsPerPage: 10,
 };
+
+function onRowEdit(row){
+  console.log("onRowEdit:");
+  console.log(row);
+}
 
 export const Default = {
   args: {
     columns: columns,
     options: options,
-    initialData: data
+    initialData: data,
+    onRowEdition: onRowEdit
   }
 };
+
+const meta = {
+  component: Datatable,
+};
+
+export default meta;

@@ -26,9 +26,9 @@ export const StyledOverlay = styled.div`
 export const StyledTitle = styled.h1`
     margin-bottom: 5px;
     margin-top: 0px;
-    background: linear-gradient(black, gray);
+    background: ${props => props.theme.popin_title_bg};
     font-size: 16px;
-    color: white;
+    color: ${props => props.theme.popin_title_font};
     padding: 2px 10px;
     border-radius: 5px 5px 0px 0px;
     display: flex;

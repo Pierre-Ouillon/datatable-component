@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { StyledHeader, StyledHeaderCell } from './index.styled';
+import { StyledHeader } from './index.styled';
+import { StyledHeaderCell } from '../../../../style';
 import Input from '../Input';
 import { DatatableContext, DatatableDispatchContext } from '../../contexts/DatatableContext';
 import SortableHeaderCell from '../SortableHeaderCell';
@@ -12,8 +13,9 @@ const Header = ({ fields }) => {
         <StyledHeader>
             <tr>
                 {fields.map((item, i) => {
+                    const sortState = (datatableState.sort.name === item.name) ? datatableState.sort.order : 'unsorted';
                     return (item.sortable 
-                        ? <SortableHeaderCell name={item.name} sortState={datatableState.sort[item.name]} key={i}>{item.label}</SortableHeaderCell> 
+                        ? <SortableHeaderCell name={item.name} sortState={sortState} key={i}>{item.label}</SortableHeaderCell> 
                         : <StyledHeaderCell key={i}>{item.label}</StyledHeaderCell>);
                 })}
                 <StyledHeaderCell key={fields.length + 1}>Actions</StyledHeaderCell>

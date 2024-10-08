@@ -1,15 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyledCell} from './index.styled';
-import Input from '../Input';
+import {StyledCell} from '../../../../style';
+import { getInput } from '../../utils';
 
-const Cell = ({field, value, editMode, formData, setFormData}) => {
-    const handleChange = (e) => {
-        formData[field.name] = e.target.value;
-        setFormData(formData);
-    };
+const Cell = ({field, value, editMode, formData, setFormData, autoFocus}) => {
     return (editMode ?
-        <StyledCell><Input initialValue={value} onChange={handleChange}></Input></StyledCell>
+        <StyledCell>{getInput(field.type, value, field.name, formData, setFormData, autoFocus)}</StyledCell>
         :
     <StyledCell>{value}</StyledCell>);
 };
