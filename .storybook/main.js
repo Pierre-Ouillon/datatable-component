@@ -11,7 +11,7 @@ const config = {
   ],
   framework: {
     name: "@storybook/react-webpack5",
-    options: {},
+    options: {strictMode: true},
   },
 };
 export default config;

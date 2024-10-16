@@ -1,40 +1,47 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import { StyledSortableHeaderCell, StyledLabel } from './index.styled';
+
+import { StyledSortableHeaderCell, StyledLabel } from './index.styled.js';
 import { StyledFlexDiv } from '../../../../style';
+import { TextContext } from '../../contexts/textContext.jsx';
 import { DatatableDispatchContext } from '../../contexts/DatatableContext';
-import initialSortIcon from '../../../../assets/images/icon_sort_initial_white.png';
-import upSortIcon from '../../../../assets/images/icon_sort_up_white.png';
-import downSortIcon from '../../../../assets/images/icon_sort_down_white.png';
+import getIcon from '../../icons.js';
 
 const nextSortState = (sortState) => {
     switch(sortState){
-        case 'unsorted':
-        case 'desc':
-            return 'asc';
-        case 'asc':
-            return 'desc';
-        default: return 'unsorted';
-    }
-};
-
-const getSortIcon = (sortState) => {
-    switch(sortState){
-        case 'unsorted': return [initialSortIcon, "sortable"];
-        case 'asc': return [upSortIcon, "sorted by ascending order"];
-        case 'desc': return [downSortIcon, "sorted by descending order"];
-        default: return ["", "error"];
+        case "unsorted":
+        case "desc":
+            return "asc";
+        case "asc":
+            return "desc";
+        default: 
+            return "unsorted";
     }
 };
 
 const SortableHeaderCell = ({ sortState = "unsorted", name, children }) => {
+    const text = useContext(TextContext);
     const dispatch = useContext(DatatableDispatchContext);
-    const [src, alt] = getSortIcon(sortState);
+    const src = getIcon(sortState);
+
+    let title;
+    switch(sortState){
+        case "asc":
+            title = text.ascSortIconTitle;
+            break;
+        case "desc": 
+            title = text.descSortIconTitle;
+            break;
+        case "unsorted":
+        default:
+            title = text.unsortedIconTitle;
+    }
+
     return (
     <StyledSortableHeaderCell $sortState={sortState} onClick={() => {dispatch({type: "sortTable", sort: {name: name, order: nextSortState(sortState)}})}}>
         <StyledFlexDiv>
             <StyledLabel>{children}</StyledLabel>
-            <img src={src} alt={alt}></img>
+            <img src={src} alt={title} title={title}></img>
         </StyledFlexDiv>
     </StyledSortableHeaderCell>
     );

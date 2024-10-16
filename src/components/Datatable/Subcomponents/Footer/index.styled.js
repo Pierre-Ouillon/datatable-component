@@ -9,6 +9,6 @@ export const StyledFooterButton = styled(StyledButton)`
 export const StyledFooter = styled.div`
     display: flex;
     justify-content: center;
-    border: 1px solid rgb(210, 210, 210);
+    border: ${props => props.theme.table_border};
     text-align: center;
 `;

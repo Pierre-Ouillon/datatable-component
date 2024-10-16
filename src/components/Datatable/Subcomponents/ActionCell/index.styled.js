@@ -1,19 +1,15 @@
+import { StyledButton } from '../../../../style';
 import styled from 'styled-components';
 
-export const StyledCell = styled.td`
-    padding: 3px;
-    border: 1px solid rgb(210, 210, 210);
+export const StyledActionContainer = styled.div`
     display: flex;
     justify-content: space-evenly;
 `;
 
-export const StyledButton = styled.button`
-    background-color: white;
-    border: 1px solid gray;
+export const StyledButtonAction = styled(StyledButton)`
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    cursor: pointer;
     margin-left: 5px;
 `;
 

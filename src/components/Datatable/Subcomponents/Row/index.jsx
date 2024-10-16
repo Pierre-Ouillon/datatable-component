@@ -7,15 +7,20 @@ import {RowContext} from '../../contexts/rowContext';
 import { DatatableDispatchContext } from '../../contexts/DatatableContext';
 
 const Row = ({fields, row, id}) => {
+    const defaultFormData = {}
+    fields.forEach((e) => {
+        defaultFormData[e.name] = row.data[e.name];
+    });
     const [editMode, setEditMode] = useState(false);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(defaultFormData);
     const dispatch = useContext(DatatableDispatchContext);
 
     let cellList = [];
 
-    fields.forEach(e => {
+    fields.forEach((e, i) => {
         cellList.push(
             <Cell 
+                autoFocus={i === 0}
                 key={e.name} 
                 field={e} 
                 value={(editMode ? row.data[e.name] : row.formattedData[e.name])} 
