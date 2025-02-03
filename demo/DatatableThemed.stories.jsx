@@ -3,7 +3,7 @@ import data from './data.json';
 
 const formatLoginDate = (value) => new Intl.DateTimeFormat("fr-FR", {timeStyle: "medium", dateStyle: "short"}).format(value);
 const formatSalary = (value) => {
-  var parts = value.toFixed(2).split(".");
+  let parts = value.toFixed(2).split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   return "$ "+parts.join(".");
 };

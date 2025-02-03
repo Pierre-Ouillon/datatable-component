@@ -18,7 +18,7 @@ const Header = ({ fields }) => {
                         ? <SortableHeaderCell name={item.name} sortState={sortState} key={i}>{item.label}</SortableHeaderCell> 
                         : <StyledHeaderCell key={i}>{item.label}</StyledHeaderCell>);
                 })}
-                <StyledHeaderCell key={fields.length + 1}>Actions</StyledHeaderCell>
+                {(datatableState.actionColumn && <StyledHeaderCell key={fields.length + 1}>Actions</StyledHeaderCell>)}
             </tr>
             <tr>
                 {fields.map((item, i) => {
@@ -28,7 +28,7 @@ const Header = ({ fields }) => {
                         }}></Input>)}
                     </StyledHeaderCell>
                 })}
-                <StyledHeaderCell key={fields.length + 1}></StyledHeaderCell>
+                {(datatableState.actionColumn && <StyledHeaderCell key={fields.length + 1}></StyledHeaderCell>)}
             </tr>
         </StyledHeader>
     );

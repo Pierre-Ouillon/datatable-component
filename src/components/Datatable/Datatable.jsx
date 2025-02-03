@@ -51,7 +51,7 @@ const getDefaultFormatter = (type) => {
     }
 };
 
-const Datatable = ({ columns, initialData, options, onRowAddition = () => { }, onRowEdition = () => { }, onRowDeletion = () => { } }) => {
+const Datatable = ({ columns, initialData, options = {}, onRowAddition = () => { }, onRowEdition = () => { }, onRowDeletion = () => { } }) => {
     let rows = [];
     let fields = columns;
     const initialFilter = {};
@@ -141,6 +141,9 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => { }, o
         filter: initialFilter,
         sort: initialSort,
         fields: fields,
+        actionColumn: (options?.actionEditRow || options?.actionDeleteRow),
+        actionEditRow: options?.actionEditRow,
+        actionDeleteRow: options?.actionDeleteRow,
         eventListeners: { onRowAddition: onRowAddition, onRowEdition: onRowEdition, onRowDeletion: onRowDeletion }
     };
 
@@ -171,19 +174,19 @@ const Datatable = ({ columns, initialData, options, onRowAddition = () => { }, o
     }
 
     return (
-        <ThemeProvider theme={{ ...defaultTheme, ...options.theme }}>
-            <TextContext.Provider value={{ ...defaultText, ...options.text }}>
+        <ThemeProvider theme={{ ...defaultTheme, ...options?.theme }}>
+            <TextContext.Provider value={{ ...defaultText, ...options?.text }}>
                 <DatatableContext.Provider value={datatableState}>
                     <DatatableDispatchContext.Provider value={dispatch}>
                         <StyledContainer>
-                            <AddRowButton setPopinDisplayed={setPopinDisplayed}></AddRowButton>
+                        {(options?.actionAddRow && <AddRowButton setPopinDisplayed={setPopinDisplayed}></AddRowButton>)}
                             <StyledTable>
                                 <Header fields={fields}></Header>
                                 <tbody>
                                     {displayedRows}
                                 </tbody>
                             </StyledTable>
-                            {(options?.rowsPerPage) && <Footer></Footer>}
+                            {(options?.rowsPerPage && <Footer></Footer>)}
                         </StyledContainer>
                         {(popinDisplayed && <AddRowPopin fields={fields} setIsDisplayed={setPopinDisplayed}></AddRowPopin>)}
                     </DatatableDispatchContext.Provider>

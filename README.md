@@ -1,7 +1,15 @@
 `DO NOT DOWNLOAD THIS VERSION, IT IS NOT WORKING YET`
-# What is datatable-component
 
-Datatable-component is a library that add a component used to display datas in a table.  
-It offers built-in actions to manage the datas:
- - Add/Edit/Delete rows
- - Filter the table
+# Datatable-Component
+
+## Installing the project
+Clone the repository: `git clone https://github.com/Pierre-Ouillon/datatable-component.git`  
+Install the required packages: `npm install`  
+
+## Availables scripts
+Build the package: `npm run build`  
+Start the demo: `npm start`  
+
+## What is datatable-component
+
+Datatable-component add the Datatable component. This component let you create easily a table to display any kind of datas. It offers built-in functionalities like filterable and sortable columns, pagination and actions to add, edit or delete rows.

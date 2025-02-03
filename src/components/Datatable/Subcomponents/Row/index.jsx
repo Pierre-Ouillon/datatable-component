@@ -4,7 +4,7 @@ import Cell from '../Cell/';
 import ActionCell from '../ActionCell/';
 import {StyledRow} from './index.styled';
 import {RowContext} from '../../contexts/rowContext';
-import { DatatableDispatchContext } from '../../contexts/DatatableContext';
+import { DatatableDispatchContext, DatatableContext } from '../../contexts/DatatableContext';
 
 const Row = ({fields, row, id}) => {
     const defaultFormData = {}
@@ -14,6 +14,7 @@ const Row = ({fields, row, id}) => {
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState(defaultFormData);
     const dispatch = useContext(DatatableDispatchContext);
+    const datatableState = useContext(DatatableContext);
 
     let cellList = [];
 
@@ -40,7 +41,7 @@ const Row = ({fields, row, id}) => {
         <RowContext.Provider value={id}>
             <StyledRow>
                 {cellList}
-                <ActionCell editMode={editMode} setEditMode={setEditMode} handleSubmit={handleSubmit}></ActionCell>
+                {(datatableState.actionColumn && <ActionCell editMode={editMode} setEditMode={setEditMode} handleSubmit={handleSubmit}></ActionCell>)}
             </StyledRow>
         </RowContext.Provider>
     );
