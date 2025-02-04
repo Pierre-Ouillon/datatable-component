@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledSortableHeaderCell, StyledLabel } from './index.styled.js';
-import { StyledFlexDiv } from '../../../../style';
+import { StyledFlexDiv } from '../../../style';
 import { TextContext } from '../../contexts/textContext.jsx';
 import { DatatableDispatchContext } from '../../contexts/DatatableContext';
 import getIcon from '../../icons.js';

@@ -1,4 +1,4 @@
-import { StyledButton } from '../../../../style';
+import { StyledButton } from '../../../style';
 import styled from 'styled-components';
 
 export const StyledActionContainer = styled.div`

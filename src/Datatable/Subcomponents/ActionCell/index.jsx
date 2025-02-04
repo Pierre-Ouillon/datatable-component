@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 
-import { StyledCell } from '../../../../style';
+import { StyledCell } from '../../../style';
 import {StyledActionContainer, StyledButtonAction, StyledImg} from './index.styled';
 import { TextContext } from '../../contexts/textContext';
 import {RowContext} from '../../contexts/rowContext';

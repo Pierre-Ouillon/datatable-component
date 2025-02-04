@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StyledHeader } from './index.styled';
-import { StyledHeaderCell } from '../../../../style';
+import { StyledHeaderCell } from '../../../style';
 import Input from '../Input';
 import { DatatableContext, DatatableDispatchContext } from '../../contexts/DatatableContext';
 import SortableHeaderCell from '../SortableHeaderCell';

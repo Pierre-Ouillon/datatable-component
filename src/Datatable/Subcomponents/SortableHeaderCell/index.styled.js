@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {StyledHeaderCell} from '../../../../style';
+import {StyledHeaderCell} from '../../../style';
 
 export const StyledSortableHeaderCell = styled(StyledHeaderCell)`
     cursor: pointer;

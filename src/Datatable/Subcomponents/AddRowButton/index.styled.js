@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StyledButton } from '../../../../style';
+import { StyledButton } from '../../../style';
 
 export const StyledButtonAdd = styled(StyledButton)`
     float: right;
