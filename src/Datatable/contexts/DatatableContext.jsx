@@ -47,12 +47,13 @@ function applySort(state) {
 
 export function datatableReducer(state, action) {
     switch (action.type) {
-        case 'deleteRow':
+        case 'deleteRow':{
             const deletedRow = state.rows.find((e) => e.rowId === action.rowId);
             state.eventListeners.onRowDeletion(deletedRow.data);
             const afterDeleteState = { ...state, rows: state.rows.filter((e) => e.rowId !== action.rowId) };
             return (state.pagination) ? updateLastPage(afterDeleteState) : afterDeleteState;
-        case 'addRow':
+        }
+        case 'addRow': {
             state.eventListeners.onRowAddition(action.rowData);
             const formattedData = {};
             const data = {};
@@ -61,7 +62,8 @@ export function datatableReducer(state, action) {
                 formattedData[field.name] = field.formatter(data[field.name]);
             });
             return applySort(applyFilter({ ...state, rows: state.rows.concat([{ rowId: state.rows.length, isDisplayed: true, data: data, formattedData: formattedData }]) }));
-        case 'editRow':
+        }
+        case 'editRow':{
             state.eventListeners.onRowEdition(action.rowData);
             const afterEditState = {
                 ...state, rows: state.rows.map((e) => {
@@ -78,18 +80,21 @@ export function datatableReducer(state, action) {
                 })
             };
             return applySort(applyFilter(afterEditState));
+        }
         case 'filterTable':
             return applyFilter({ ...state, filter: { ...state.filter, ...action.filter } });
         case 'sortTable':
             return applySort({ ...state, sort: action.sort });
         case 'goToFirstPage':
             return { ...state, pagination: { ...state.pagination, currentPage: 1 } };
-        case 'goToPreviousPage':
+        case 'goToPreviousPage':{
             const previousPage = (state.pagination.currentPage > 1) ? state.pagination.currentPage - 1 : 1;
             return { ...state, pagination: { ...state.pagination, currentPage: previousPage } };
-        case 'goToNextPage':
+        }
+        case 'goToNextPage': {
             const nextPage = (state.pagination.currentPage < state.pagination.lastPage) ? state.pagination.currentPage + 1 : state.pagination.lastPage;
             return { ...state, pagination: { ...state.pagination, currentPage: nextPage } };
+        }
         case 'goToLastPage':
             return { ...state, pagination: { ...state.pagination, currentPage: state.pagination.lastPage } };
         case 'goToPage':

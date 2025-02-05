@@ -2,10 +2,9 @@ import styled from 'styled-components';
 import { StyledButton } from '../../../style';
 
 export const StyledPopin = styled.div`
-    display: "inline-block";
     width: 50%;
     background-color: white;
-    position: absolute;
+    position: fixed;
     top: 10vh;
     left: 25vw;
     border-radius: 5px;
@@ -13,12 +12,11 @@ export const StyledPopin = styled.div`
 `;
 
 export const StyledOverlay = styled.div`
-    display: "inline-block";
     width: 100vw;
     height: 100vh;
     background-color: black;
     opacity: 0.5;
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;  
 `;

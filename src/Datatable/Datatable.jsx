@@ -1,5 +1,4 @@
-import React, { useState, useReducer } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useReducer, useMemo } from 'react';
 import { format } from 'date-fns';
 import { ThemeProvider } from 'styled-components';
 
@@ -15,6 +14,67 @@ import {
 } from './index.styled';
 import { convertToType, mySort } from './utils';
 import { TextContext } from './contexts/textContext';
+
+const columnsProps = {
+    'name': 'string',
+    'label': 'string',
+    'type': 'string',
+    'filterable': 'boolean',
+    'sortable': 'boolean',
+    'defaultSort': 'string',
+    'defaultValue': '*',
+    'formatter': 'function'
+};
+
+const optionsProps = {
+    'actionAddRow': 'boolean',
+    'actionEditRow': 'boolean',
+    'actionDeleteRow': 'boolean',
+    'rowsPerPage': 'number',
+    'theme': 'object',
+    'text': 'object',
+};
+
+const defaultTheme = {
+    table_border: "1px solid rgb(210, 210, 210)",
+    header_bg: "black",
+    header_font: "white",
+    header_separator: "2px solid white",
+    body_bg_even: "rgb(233,233,233)",
+    body_bg_odd: "white",
+    body_font_even: "black",
+    body_font_odd: "black",
+    cell_border: "1px solid rgb(210, 210, 210)",
+    button_bg: "white",
+    button_bg_hover: "rgb(233,233,233)",
+    button_bg_disabled: "rgb(240,240,240)",
+    button_font: "black",
+    button_border: "1px solid gray",
+    popin_title_bg: "linear-gradient(black, gray)",
+    popin_title_font: "white",
+    button_icons: "black",
+    sort_icons: "white",
+    pagination_icons: "black",
+    popin_icons: "white"
+};
+
+const defaultText = {
+    "addRowButton": "Add a new row",
+    "addRowPopinTitle": "Add a new row",
+    "addRowPopinXMark": "Close the pop-in",
+    "addRowPopinSubmit": "Submit",
+    "actionCellSubmitTitle": "Submit the changes",
+    "actionCellCancelTitle": "Cancel the changes",
+    "actionCellEditTitle": "Edit the row",
+    "actionCellDeleteTitle": "Delete the row",
+    "paginationFirstTitle": "Go to the first page",
+    "paginationPreviousTitle": "Go to the previous page",
+    "paginationNextTitle": "Go to the next page",
+    "paginationLastTitle": "Go to the last page",
+    "unsortedIconTitle": "sortable, click to sort by ascending order",
+    "ascSortIconTitle": "sorted by ascending order, click to sort by descending order",
+    "descSortIconTitle": "sorted by descending order, click to sort by ascending order"
+};
 
 const getDefaultValues = (type) => {
     switch (type) {
@@ -39,7 +99,7 @@ const getDefaultFormatter = (type) => {
             return (value) => new Intl.DateTimeFormat(undefined, { timeStyle: "medium", dateStyle: "medium" }).format(value);
         case 'float':
             return (value) => {
-                var parts = value.toString().split(".");
+                let parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                 return parts.join(".");
             }
@@ -51,50 +111,98 @@ const getDefaultFormatter = (type) => {
     }
 };
 
-const Datatable = ({ columns, initialData, options = {}, onRowAddition = () => { }, onRowEdition = () => { }, onRowDeletion = () => { } }) => {
+const validateParams = (columns, initialData, options, onRowAddition, onRowEdition, onRowDeletion) => {
+    const errors = [];
+
+    if (columns instanceof Array && columns.length > 0) {
+        errors.join(validateColumns(columns));
+    }
+    else {
+        errors.push("Datatable-component error: 'columns' is a required argument, and it needs to be an Array")
+    }
+
+    if (!(initialData instanceof Array)) {
+        errors.push("Datatable-component error: 'initialData' is a " + typeof initialData + ", Array expected");
+    }
+
+    if (options instanceof Object) {
+        errors.join(validateOptions(options));
+    }
+    else {
+        errors.push("Datatable-component error: 'options' is a " + typeof +", Object expected")
+    }
+
+    if (!(onRowAddition instanceof Function)) {
+        errors.push("Datatable-component error: 'onRowAddition' is a " + typeof onRowAddition + ", Function expected");
+    }
+    if (!(onRowEdition instanceof Function)) {
+        errors.push("Datatable-component error: 'onRowEdition' is a " + typeof onRowEdition + ", Function expected");
+    }
+    if (!(onRowDeletion instanceof Function)) {
+        errors.push("Datatable-component error: 'onRowDeletion' is a " + typeof onRowDeletion + ", Function expected");
+    }
+
+    return errors;
+}
+
+const validateColumns = (columns) => {
+    const errors = [];
+    let i = 1;
+    columns.forEach(column => {
+        if (column['name'] === undefined) {
+            errors.push("Datatable-component error for column " + i + ": 'name' is a required property");
+        }
+        for (const prop in column) {
+            if (columnsProps[prop] === undefined) {
+                errors.push("Datatable-component error for column " + i + ": " + prop + " isn't a valid property");
+            } else if (columnsProps[prop] !== '*' && typeof column[prop] !== columnsProps[prop]) {
+                errors.push("Datatable-component error for column " + i + ": the property '" + prop + "' is of type " + typeof column[prop] + ", " + columnsProps[prop] + " expected");
+            }
+        }
+        i++;
+    });
+    return errors;
+}
+
+const validateOptions = (options) => {
+    const errors = [];
+    //Validate the 'theme' prop
+    for (const propTheme in options?.theme) {
+        if (defaultTheme[propTheme] === undefined) {
+            errors.push("Datatable-component error: '" + propTheme + "' isn't a valid property for the 'theme' option");
+        }
+    }
+
+    //Validate the 'text' prop
+    for (const propText in options?.text) {
+        if (defaultText[propText] === undefined) {
+            errors.push("Datatable-component error: '" + propText + "' isn't a valid property for the 'text' option");
+        }
+    }
+
+    for (const prop in options) {
+        if (optionsProps[prop] === undefined) {
+            errors.push("Datatable-component error: " + prop + " isn't a valid option");
+        } else if (optionsProps[prop] !== '*' && typeof options[prop] !== optionsProps[prop]) {
+            errors.push("Datatable-component error: the option '" + prop + "' is of type " + typeof options[prop] + ", " + optionsProps[prop] + " expected");
+        }
+    }
+    return errors;
+}
+
+const Datatable = ({ columns, initialData = [], options = {}, onRowAddition = () => { }, onRowEdition = () => { }, onRowDeletion = () => { } }) => {
+    const errors = validateParams(columns, initialData, options, onRowAddition, onRowEdition, onRowDeletion)
+    if(errors.length > 0){
+        console.error(errors);
+        throw new Error("A Datatable component is incorrectly configured, check the console logs to see the details")
+    }
     let rows = [];
-    let fields = columns;
+    let fields = [];
+    columns.forEach((e) => fields.push({...e}));
+    const text = useMemo(() => { return {...defaultText, ...options?.text} }, options.text)
+    const theme = useMemo(() => { return { ...defaultTheme, ...options?.theme } }, options.theme)
     const initialFilter = {};
     let initialSort;
-    const defaultTheme = {
-        table_border: "1px solid rgb(210, 210, 210)",
-        header_bg: "black",
-        header_font: "white",
-        header_separator: "2px solid white",
-        body_bg_even: "rgb(233,233,233)",
-        body_bg_odd: "white",
-        body_font_even: "black",
-        body_font_odd: "black",
-        cell_border: "1px solid rgb(210, 210, 210)",
-        button_bg: "white",
-        button_bg_hover: "rgb(233,233,233)",
-        button_bg_disabled: "rgb(240,240,240)",
-        button_font: "black",
-        button_border: "1px solid gray",
-        popin_title_bg: "linear-gradient(black, gray)",
-        popin_title_font: "white",
-        button_icons: "black",
-        sort_icons: "white",
-        pagination_icons: "black",
-        popin_icons: "white"
-    };
-    const defaultText = {
-        "addRowButton": "Add a new row",
-        "addRowPopinTitle": "Add a new row",
-        "addRowPopinXMark": "Close the pop-in",
-        "addRowPopinSubmit": "Submit",
-        "actionCellSubmitTitle": "Submit the changes",
-        "actionCellCancelTitle": "Cancel the changes",
-        "actionCellEditTitle": "Edit the row",
-        "actionCellDeleteTitle": "Delete the row",
-        "paginationFirstTitle": "Go to the first page",
-        "paginationPreviousTitle": "Go to the previous page",
-        "paginationNextTitle": "Go to the next page",
-        "paginationLastTitle": "Go to the last page",
-        "unsortedIconTitle": "sortable, click to sort by ascending order",
-        "ascSortIconTitle": "sorted by ascending order, click to sort by descending order",
-        "descSortIconTitle": "sorted by descending order, click to sort by ascending order"
-    };
 
     fields.forEach((e) => {
         if (!e.type) {
@@ -125,7 +233,7 @@ const Datatable = ({ columns, initialData, options = {}, onRowAddition = () => {
         const data = {};
         const formattedData = {};
         fields.forEach((field) => {
-            data[field.name] = convertToType(element[field.name], field.type);
+            data[field.name] = (element[field.name] !== undefined) ? convertToType(element[field.name], field.type) : '';
             formattedData[field.name] = field.formatter(data[field.name]);
         });
 
@@ -174,8 +282,8 @@ const Datatable = ({ columns, initialData, options = {}, onRowAddition = () => {
     }
 
     return (
-        <ThemeProvider theme={{ ...defaultTheme, ...options?.theme }}>
-            <TextContext.Provider value={{ ...defaultText, ...options?.text }}>
+        <ThemeProvider theme={theme}>
+            <TextContext.Provider value={text}>
                 <DatatableContext.Provider value={datatableState}>
                     <DatatableDispatchContext.Provider value={dispatch}>
                         <StyledContainer>
@@ -194,15 +302,6 @@ const Datatable = ({ columns, initialData, options = {}, onRowAddition = () => {
             </TextContext.Provider>
         </ThemeProvider>
     );
-};
-
-Datatable.propTypes = {
-    columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-    initialData: PropTypes.arrayOf(PropTypes.object),
-    options: PropTypes.object,
-    onRowAddition: PropTypes.func,
-    onRowEdition: PropTypes.func,
-    onRowDeletion: PropTypes.func
 };
 
 export default Datatable;

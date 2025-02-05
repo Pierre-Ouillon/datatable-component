@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import PropTypes from 'prop-types';
 
 import { StyledSortableHeaderCell, StyledLabel } from './index.styled.js';
 import { StyledFlexDiv } from '../../../style';
@@ -41,14 +40,12 @@ const SortableHeaderCell = ({ sortState = "unsorted", name, children }) => {
     <StyledSortableHeaderCell $sortState={sortState} onClick={() => {dispatch({type: "sortTable", sort: {name: name, order: nextSortState(sortState)}})}}>
         <StyledFlexDiv>
             <StyledLabel>{children}</StyledLabel>
-            <img src={src} alt={title} title={title}></img>
+            <div>
+                <img src={src} alt={title} title={title}></img>
+            </div>
         </StyledFlexDiv>
     </StyledSortableHeaderCell>
     );
-};
-
-SortableHeaderCell.propTypes = {
-    initialSortState: PropTypes.string
 };
 
 export default SortableHeaderCell;

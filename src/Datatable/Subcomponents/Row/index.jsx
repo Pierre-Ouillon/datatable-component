@@ -1,5 +1,4 @@
 import React, {useState, useContext} from 'react';
-import PropTypes from 'prop-types';
 import Cell from '../Cell/';
 import ActionCell from '../ActionCell/';
 import {StyledRow} from './index.styled';
@@ -45,11 +44,6 @@ const Row = ({fields, row, id}) => {
             </StyledRow>
         </RowContext.Provider>
     );
-};
-
-Row.propTypes = {
-    row: PropTypes.object.isRequired,
-    id: PropTypes.number.isRequired
 };
 
 export default Row;

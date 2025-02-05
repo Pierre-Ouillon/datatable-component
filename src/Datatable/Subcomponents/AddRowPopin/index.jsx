@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { StyledPopin, StyledOverlay, StyledTitle, StyledTitleImg, StyledHr, StyledButtonValid } from './index.styled';
 import AddRowInput from '../AddRowInput';
 import { DatatableDispatchContext } from '../../contexts/DatatableContext';
@@ -51,9 +50,5 @@ const AddRowPopin = ({fields, setIsDisplayed}) => {
         </>
     );
 };
-
-AddRowPopin.propTypes = {
-    columns: PropTypes.arrayOf(PropTypes.object)
-}
 
 export default AddRowPopin;
