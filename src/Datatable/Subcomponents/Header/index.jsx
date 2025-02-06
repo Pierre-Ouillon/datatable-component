@@ -12,7 +12,7 @@ const Header = ({ fields }) => {
         <StyledHeader>
             <tr>
                 {fields.map((item, i) => {
-                    const sortState = (datatableState.sort.name === item.name) ? datatableState.sort.order : 'unsorted';
+                    const sortState = (datatableState.sort?.name === item.name) ? datatableState.sort.order : 'unsorted';
                     return (item.sortable 
                         ? <SortableHeaderCell name={item.name} sortState={sortState} key={item.name.concat('_hc')}>{item.label}</SortableHeaderCell> 
                         : <StyledHeaderCell key={item.name.concat('_hc')}>{item.label}</StyledHeaderCell>);
