@@ -17,6 +17,7 @@ const columns = [
   {name: "holidays", label: "Holidays", type: "int", filterable: true, sortable: true},
   {name: "last_login_time", label: "Last login", type: "datetime", formatter: formatLoginDate, sortable: true}
 ];
+
 const options = {
   rowsPerPage: 10,
   actionAddRow: true,

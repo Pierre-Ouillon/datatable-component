@@ -1,5 +1,4 @@
 import Datatable from '../src/Datatable/Datatable';
-import data from './data.json';
 
 const formatLoginDate = (value) => new Intl.DateTimeFormat("fr-FR", {timeStyle: "medium", dateStyle: "short"}).format(value);
 const formatSalary = (value) => {

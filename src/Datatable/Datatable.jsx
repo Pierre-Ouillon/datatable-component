@@ -36,22 +36,22 @@ const optionsProps = {
 };
 
 const defaultTheme = {
-    table_border: "1px solid rgb(210, 210, 210)",
-    header_bg: "black",
-    header_font: "white",
-    header_separator: "2px solid white",
+    table_border: "1px solid rgb(210,210,210)",
+    header_bg: "#000000",
+    header_font: "#FFFFFF",
+    header_separator: "2px solid #FFFFFF",
     body_bg_even: "rgb(233,233,233)",
-    body_bg_odd: "white",
-    body_font_even: "black",
-    body_font_odd: "black",
-    cell_border: "1px solid rgb(210, 210, 210)",
-    button_bg: "white",
+    body_bg_odd: "#FFFFFF",
+    body_font_even: "#000000",
+    body_font_odd: "#000000",
+    cell_border: "1px solid rgb(210,210,210)",
+    button_bg: "#FFFFFF",
     button_bg_hover: "rgb(233,233,233)",
     button_bg_disabled: "rgb(240,240,240)",
-    button_font: "black",
+    button_font: "#000000",
     button_border: "1px solid gray",
-    popin_title_bg: "linear-gradient(black, gray)",
-    popin_title_font: "white",
+    popin_title_bg: "linear-gradient(#000000, #808080)",
+    popin_title_font: "#FFFFFF",
     button_icons: "black",
     sort_icons: "white",
     pagination_icons: "black",
@@ -63,10 +63,10 @@ const defaultText = {
     "addRowPopinTitle": "Add a new row",
     "addRowPopinXMark": "Close the pop-in",
     "addRowPopinSubmit": "Submit",
-    "actionCellSubmitTitle": "Submit the changes",
-    "actionCellCancelTitle": "Cancel the changes",
     "actionCellEditTitle": "Edit the row",
     "actionCellDeleteTitle": "Delete the row",
+    "actionCellSubmitTitle": "Submit the changes",
+    "actionCellCancelTitle": "Cancel the changes",
     "paginationFirstTitle": "Go to the first page",
     "paginationPreviousTitle": "Go to the previous page",
     "paginationNextTitle": "Go to the next page",
@@ -112,10 +112,10 @@ const getDefaultFormatter = (type) => {
 };
 
 const validateParams = (columns, initialData, options, onRowAddition, onRowEdition, onRowDeletion) => {
-    const errors = [];
+    let errors = [];
 
     if (columns instanceof Array && columns.length > 0) {
-        errors.join(validateColumns(columns));
+        errors = errors.concat(validateColumns(columns));
     }
     else {
         errors.push("Datatable-component error: 'columns' is a required argument, and it needs to be an Array")
@@ -126,7 +126,7 @@ const validateParams = (columns, initialData, options, onRowAddition, onRowEditi
     }
 
     if (options instanceof Object) {
-        errors.join(validateOptions(options));
+        errors = errors.concat(validateOptions(options));
     }
     else {
         errors.push("Datatable-component error: 'options' is a " + typeof +", Object expected")
@@ -165,26 +165,30 @@ const validateColumns = (columns) => {
 }
 
 const validateOptions = (options) => {
-    const errors = [];
-    //Validate the 'theme' prop
-    for (const propTheme in options?.theme) {
-        if (defaultTheme[propTheme] === undefined) {
-            errors.push("Datatable-component error: '" + propTheme + "' isn't a valid property for the 'theme' option");
-        }
-    }
-
-    //Validate the 'text' prop
-    for (const propText in options?.text) {
-        if (defaultText[propText] === undefined) {
-            errors.push("Datatable-component error: '" + propText + "' isn't a valid property for the 'text' option");
-        }
-    }
-
+    let errors = [];
+    
     for (const prop in options) {
         if (optionsProps[prop] === undefined) {
             errors.push("Datatable-component error: " + prop + " isn't a valid option");
         } else if (optionsProps[prop] !== '*' && typeof options[prop] !== optionsProps[prop]) {
             errors.push("Datatable-component error: the option '" + prop + "' is of type " + typeof options[prop] + ", " + optionsProps[prop] + " expected");
+        }
+        else if(prop === 'theme'){
+            errors = errors.concat(validateAdvancedOptions('theme', options.theme, defaultTheme))   
+        }
+        else if (prop === 'text'){
+            errors = errors.concat(validateAdvancedOptions('text', options.text, defaultText))   
+        }
+    }
+
+    return errors;
+}
+
+const validateAdvancedOptions = (optionName, optionObject, validOptions) => {
+    const errors = [];
+    for (const prop in optionObject) {
+        if (validOptions[prop] === undefined) {
+            errors.push("Datatable-component error: '" + prop + "' isn't a valid property for the '"+optionName+"' option");
         }
     }
     return errors;
